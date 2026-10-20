@@ -1,0 +1,872 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<style>body{margin:0}[hidden]{display:none!important}img{max-width:100%}</style>
+<title>Yashal Ahmed | Robotics Engineer</title>
+<meta name="description" content="Portfolio of Syed Yashal Ahmed, robotics engineer: autonomous robots, perception, planning and manipulation.">
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@700;800;900&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout concept: a drafting sheet. A live robot arm is the one bold moment in the hero;
+   everything else is calm hairlines, mono labels and a drawing title block in the footer. */
+:root{
+  --bg:#E7ECF1;
+  --panel:#F4F7FA;
+  --ink:#0F1A2B;
+  --muted:#3F4E64;
+  --line:#B7C3D1;
+  --grid:#CBD5E0;
+  --blue:#1D4ED8;
+  --amber:#F0A800;
+  --f-display:'Big Shoulders Display','Arial Narrow',Impact,sans-serif;
+  --f-body:'IBM Plex Sans',system-ui,-apple-system,'Segoe UI',sans-serif;
+  --f-mono:'IBM Plex Mono',ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0B1220;--panel:#111A2B;--ink:#E8EDF5;--muted:#9FB0C7;--line:#26344D;--grid:#1B2840;
+    --blue:#7BA2FF;--amber:#FFC53D;color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0B1220;--panel:#111A2B;--ink:#E8EDF5;--muted:#9FB0C7;--line:#26344D;--grid:#1B2840;
+  --blue:#7BA2FF;--amber:#FFC53D;color-scheme:dark;
+}
+
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+body{
+  background:var(--bg);color:var(--ink);
+  font:400 1rem/1.6 var(--f-body);
+  padding-block:0;
+  padding-left:max(16px,env(safe-area-inset-left,0px));
+  padding-right:max(16px,env(safe-area-inset-right,0px));
+}
+.wrap{max-width:1160px;margin-inline:auto}
+a{color:inherit}
+:focus-visible{outline:2px solid var(--blue);outline-offset:3px}
+
+/* hero */
+.hero{position:relative;isolation:isolate;display:grid;grid-template-columns:minmax(0,1fr);gap:2rem;padding-block:2.5rem 3.5rem}
+.hero::before{
+  content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;
+  background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);
+  background-size:40px 40px;
+  -webkit-mask-image:radial-gradient(ellipse at 50% 30%,#000 20%,transparent 75%);
+  mask-image:radial-gradient(ellipse at 50% 30%,#000 20%,transparent 75%);
+}
+.hero-copy{min-width:0}
+.eyebrow{display:flex;align-items:center;gap:.6rem;margin:0 0 1rem;font:500 .8rem/1 var(--f-mono);letter-spacing:.14em;text-transform:uppercase;color:var(--blue)}
+.eyebrow::before{content:"";width:.6rem;height:.6rem;background:var(--amber)}
+h1{margin:0;display:flex;flex-wrap:wrap;gap:0 .28em;font:900 clamp(3.2rem,9.5vw,7.25rem)/.9 var(--f-display);text-transform:uppercase}
+.intro-row{display:grid;grid-template-columns:minmax(0,1fr);gap:1.4rem;margin-top:1.4rem;align-items:end}
+@media (min-width:820px){.intro-row{grid-template-columns:minmax(0,1.5fr) auto;gap:3rem}}
+.lead{max-width:52ch;margin:0;font-size:1.12rem}
+.school{margin:.8rem 0 0;font:400 .82rem/1.5 var(--f-mono);letter-spacing:.04em;color:var(--muted)}
+.cta{display:flex;flex-wrap:wrap;gap:.7rem;margin:0}
+.btn{display:inline-flex;align-items:center;padding:.95rem 1.2rem;font:500 .8rem/1 var(--f-mono);letter-spacing:.08em;text-transform:uppercase;text-decoration:none;background:var(--ink);color:var(--bg);border:1px solid var(--ink);border-radius:2px}
+.btn.alt{background:transparent;color:var(--ink)}
+.btn:hover{background:var(--amber);border-color:var(--amber);color:#1a1200}
+
+/* the rig: a big panel, with the five sections on the arm's reach radius */
+.rig{container-type:inline-size;margin:0;min-width:0;background:var(--panel);border:1px solid var(--line);border-radius:2px;overflow:hidden}
+.stage{position:relative;background:var(--panel);aspect-ratio:1/.95;border-bottom:1px solid var(--line);touch-action:pan-y;user-select:none;-webkit-user-select:none;cursor:crosshair}
+@container (min-width:600px){.stage{aspect-ratio:16/8}}
+@container (min-width:900px){.stage{aspect-ratio:16/7}}
+.stage canvas{position:absolute;inset:0;width:100%;height:100%;display:block;z-index:2;pointer-events:none}
+.ring-nav{position:absolute;inset:0;z-index:1;pointer-events:none}
+.fig,.mode{position:absolute;top:.75rem;z-index:3;font:500 .7rem/1.4 var(--f-mono);letter-spacing:.08em;text-transform:uppercase;pointer-events:none}
+.fig{left:.85rem;color:var(--muted)}
+.mode{right:.85rem;display:flex;align-items:center;gap:.45rem;color:var(--ink)}
+.mode::before{content:"";width:.5rem;height:.5rem;border-radius:50%;background:var(--amber)}
+@container (max-width:520px){.fig{display:none}.mode{left:.85rem;right:auto}}
+
+.node{position:absolute;width:44px;height:44px;margin:-22px 0 0 -22px;display:grid;place-items:center;text-decoration:none;color:var(--ink);border-radius:50%;cursor:pointer;pointer-events:auto;transition:left .5s cubic-bezier(.3,1.6,.5,1),top .5s cubic-bezier(.3,1.6,.5,1)}
+.node.carry{transition:none}
+.node .ring{width:22px;height:22px;border-radius:50%;border:2px solid var(--blue);display:grid;place-items:center;transition:background .15s,border-color .15s,transform .15s}
+.node .ring::after{content:"";width:6px;height:6px;border-radius:50%;background:var(--blue)}
+.node .nl{position:absolute;bottom:100%;left:50%;transform:translateX(-50%);white-space:nowrap;padding:.4rem .55rem;font:500 .7rem/1 var(--f-mono);letter-spacing:.08em;text-transform:uppercase;background:var(--panel);border:1px solid var(--line);border-radius:2px;transition:background .15s,color .15s,border-color .15s}
+@container (max-width:520px){.node .nl{font-size:.62rem;padding:.35rem .4rem;letter-spacing:.05em}}
+.node .nl .sh{display:none}
+@container (max-width:520px){.node .nl .lg{display:none}.node .nl .sh{display:inline}}
+.node:hover .ring,.node:focus-visible .ring{border-color:var(--amber);transform:scale(1.25)}
+.node:hover .nl,.node:focus-visible .nl{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.node:focus-visible{outline:2px solid var(--blue);outline-offset:2px}
+.node.grip .ring{border-color:var(--amber);background:color-mix(in srgb,var(--amber) 40%,transparent)}
+.node.grip .nl{background:var(--amber);color:#1a1200;border-color:var(--amber)}
+
+.to-arm{position:fixed;z-index:20;right:max(16px,env(safe-area-inset-right,0px));bottom:calc(16px + env(safe-area-inset-bottom,0px));padding:.8rem 1rem;font:500 .74rem/1 var(--f-mono);letter-spacing:.08em;text-transform:uppercase;text-decoration:none;color:var(--bg);background:var(--ink);border:1px solid var(--ink);border-radius:2px}
+.to-arm[hidden]{display:none}
+.to-arm:hover{background:var(--amber);border-color:var(--amber);color:#1a1200}
+.read{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1px;margin:0;background:var(--line);font-variant-numeric:tabular-nums}
+@container (min-width:440px){.read{grid-template-columns:repeat(4,minmax(0,1fr))}}
+.read>div{background:var(--panel);padding:.5rem .7rem;min-width:0}
+.read dt{font:400 .66rem/1.4 var(--f-mono);letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.read dd{margin:0;font:500 .82rem/1.4 var(--f-mono);white-space:nowrap}
+.rig figcaption{padding:.65rem .8rem;border-top:1px solid var(--line);font:400 .72rem/1.5 var(--f-mono);color:var(--muted)}
+
+/* sections */
+.sec{padding-block:3.25rem}
+.sec-head{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:.4rem 1.5rem;margin-bottom:1.5rem;padding-bottom:.9rem;border-bottom:1px solid var(--line)}
+h2{margin:0;font:800 clamp(2.2rem,5vw,3.4rem)/1 var(--f-display);text-transform:uppercase}
+.count{font:500 .76rem/1 var(--f-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.chip{display:inline-block;padding:.4rem .5rem;font:500 .72rem/1 var(--f-mono);color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:2px}
+
+.filters{display:flex;flex-wrap:wrap;gap:.5rem;margin:0 0 1.25rem}
+.filter{padding:.6rem .75rem;font:500 .74rem/1 var(--f-mono);letter-spacing:.06em;text-transform:uppercase;color:var(--ink);background:transparent;border:1px solid var(--line);border-radius:2px;cursor:pointer}
+.filter span{margin-left:.35rem;color:var(--muted)}
+.filter:hover{border-color:var(--blue)}
+.filter[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.filter[aria-pressed="true"] span{color:inherit;opacity:.7}
+
+/* project cards */
+.grid{display:grid;gap:1rem;grid-template-columns:repeat(auto-fill,minmax(min(100%,300px),1fr))}
+.card{position:relative;display:flex;flex-direction:column;gap:.9rem;min-width:0;padding:1.25rem;background:var(--panel);border:1px solid var(--line);border-radius:2px}
+.card::before{content:"";position:absolute;top:-1px;left:-1px;width:14px;height:14px;border-top:3px solid var(--amber);border-left:3px solid var(--amber)}
+.card-top{display:flex;justify-content:space-between;gap:.5rem;font:500 .72rem/1.3 var(--f-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.card h3{margin:0;font:800 1.8rem/1.02 var(--f-display);text-transform:uppercase;text-wrap:balance}
+.card p{margin:0}
+.hl{display:grid;gap:.5rem;margin:0;padding:0;list-style:none;font-size:.92rem;color:var(--muted)}
+.hl li{position:relative;padding-left:1.1rem}
+.hl li::before{content:"";position:absolute;left:0;top:.7em;width:.5rem;height:2px;background:var(--blue)}
+.stack{display:flex;flex-wrap:wrap;gap:.35rem;margin:auto 0 0;padding:0;list-style:none}
+.card-links{display:flex;flex-wrap:wrap;gap:.4rem 1.1rem;font:500 .78rem/1.3 var(--f-mono);letter-spacing:.04em}
+.card-links a{color:var(--blue)}
+.empty{padding:2rem 0;color:var(--muted)}
+
+/* project pictures */
+.shot{position:relative;margin:-1.25rem -1.25rem 0;aspect-ratio:16/10;overflow:hidden;background:var(--bg);border-bottom:1px solid var(--line)}
+.shot img{display:block;width:100%;height:100%;object-fit:cover}
+.shot.ph{display:grid;place-items:center;background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);background-size:20px 20px}
+.shot.ph b{max-width:100%;font:900 clamp(1.8rem,5vw,2.4rem)/1 var(--f-display);text-transform:uppercase;text-align:center;overflow-wrap:anywhere;padding-inline:1rem;color:var(--line)}
+.shot.ph span{position:absolute;left:.8rem;bottom:.6rem;font:400 .66rem/1.4 var(--f-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+
+/* certifications */
+.certs{display:grid;gap:1rem;grid-template-columns:repeat(auto-fill,minmax(min(100%,320px),1fr))}
+.cert{display:flex;align-items:center;gap:1.1rem;min-width:0;padding:1.25rem;background:var(--panel);border:1px solid var(--line);border-radius:2px}
+.cert>div{min-width:0}
+.seal{width:56px;height:56px;flex:none;color:var(--blue)}
+.seal .tick{stroke:var(--amber)}
+.cert h3{margin:0;font:800 1.7rem/1.02 var(--f-display);text-transform:uppercase;text-wrap:balance}
+.cert .meta{margin:.4rem 0 0;font:400 .78rem/1.4 var(--f-mono);color:var(--muted)}
+.cert .cl{display:inline-block;margin-top:.5rem;font:500 .78rem/1.3 var(--f-mono);color:var(--blue)}
+
+/* skills + education */
+.label{margin:0 0 .75rem;font:500 .74rem/1.3 var(--f-mono);letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.skills{display:grid;gap:1.75rem 2rem;grid-template-columns:repeat(auto-fill,minmax(min(100%,230px),1fr))}
+.chips{display:flex;flex-wrap:wrap;gap:.4rem}
+.edu{display:grid;gap:2.25rem 3rem;grid-template-columns:minmax(0,1fr)}
+@media (min-width:800px){.edu{grid-template-columns:minmax(0,1fr) minmax(0,1.2fr)}}
+.edu h3{margin:0;font:800 1.7rem/1.05 var(--f-display);text-transform:uppercase;text-wrap:balance}
+.edu .deg{margin-bottom:1.25rem}
+.edu .deg p{margin:.15rem 0 0;color:var(--muted)}
+.course{display:grid;grid-template-columns:7.5rem minmax(0,1fr);gap:1rem;padding-block:.6rem;border-bottom:1px solid var(--line)}
+.course b{font:500 .8rem/1.6 var(--f-mono);color:var(--blue)}
+.edu .block+.block{margin-top:1.75rem}
+
+/* contact + footer */
+.contact{padding-block:3.5rem 2.5rem}
+.contact h2{max-width:14ch;font-size:clamp(2.8rem,8vw,6rem);line-height:.92}
+.contact p{max-width:52ch;margin:1.1rem 0 0;font-size:1.1rem}
+.links{display:flex;flex-wrap:wrap;gap:.7rem;margin-top:1.6rem}
+.pill{display:inline-flex;align-items:center;gap:.6rem;padding:.7rem .9rem;font:500 .82rem/1 var(--f-mono);border:1px solid var(--ink);border-radius:2px;text-decoration:none}
+.pill button{font:500 .7rem/1 var(--f-mono);letter-spacing:.06em;text-transform:uppercase;padding:.4rem .5rem;color:var(--bg);background:var(--ink);border:0;border-radius:2px;cursor:pointer}
+a.pill:hover{background:var(--amber);border-color:var(--amber);color:#1a1200}
+.foot{padding-block:1rem 3rem}
+.tb{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,200px),1fr));gap:1px;background:var(--line);border:1px solid var(--line)}
+.tb>div{background:var(--panel);padding:.7rem .9rem;min-width:0}
+.tb dt{font:400 .64rem/1.4 var(--f-mono);letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.tb dd{margin:0;font:500 .86rem/1.4 var(--f-mono);overflow-wrap:anywhere}
+</style>
+</head>
+<body>
+
+
+<div class="wrap">
+  <main id="top">
+    <section class="hero" aria-label="Introduction">
+      <div class="hero-copy">
+        <p class="eyebrow" id="role"></p>
+        <h1 id="name"></h1>
+        <div class="intro-row">
+          <div>
+            <p class="lead" id="intro"></p>
+            <p class="school" id="school"></p>
+          </div>
+          <div class="cta">
+            <a class="btn" href="#projects">View projects</a>
+            <a class="btn alt" href="#contact">Get in touch</a>
+          </div>
+        </div>
+      </div>
+
+      <figure class="rig">
+        <div class="stage" id="stage">
+          <canvas id="rigCanvas" role="img" aria-label="A three-joint robot arm that reaches toward your pointer and grips the section you click"></canvas>
+          <nav class="ring-nav" id="nodes" aria-label="Sections"></nav>
+          <span class="fig">Fig. 1 · 3R planar arm · site map</span>
+          <span class="mode" id="mode">Auto sweep</span>
+        </div>
+        <dl class="read">
+          <div><dt>joint_1</dt><dd id="r1">0.0°</dd></div>
+          <div><dt>joint_2</dt><dd id="r2">0.0°</dd></div>
+          <div><dt>joint_3</dt><dd id="r3">0.0°</dd></div>
+          <div><dt>tool0 x, z</dt><dd id="rt">0, 0 mm</dd></div>
+        </dl>
+        <figcaption>Move the pointer to steer the arm. The claw opens wide over a section. Click: it snaps shut, lifts the tag, then the page jumps there.</figcaption>
+      </figure>
+    </section>
+
+    <section class="sec" id="projects" aria-labelledby="h-projects">
+      <div class="sec-head"><h2 id="h-projects">Projects</h2><span class="count" id="pcount" aria-live="polite"></span></div>
+      <div class="filters" id="filters" role="group" aria-label="Filter projects by area"></div>
+      <div class="grid" id="projectGrid"></div>
+    </section>
+
+    <section class="sec" id="skills" aria-labelledby="h-skills">
+      <div class="sec-head"><h2 id="h-skills">Skills</h2></div>
+      <div class="skills" id="skillGrid"></div>
+    </section>
+
+    <section class="sec" id="education" aria-labelledby="h-edu">
+      <div class="sec-head"><h2 id="h-edu">Education</h2></div>
+      <div class="edu" id="eduBody"></div>
+    </section>
+
+    <section class="sec" id="certifications" aria-labelledby="h-cert">
+      <div class="sec-head"><h2 id="h-cert">Certifications</h2><span class="count" id="ccount"></span></div>
+      <div class="certs" id="certGrid"></div>
+    </section>
+
+    <section class="contact" id="contact" aria-labelledby="h-contact">
+      <h2 id="h-contact"></h2>
+      <p id="focus"></p>
+      <div class="links" id="links"></div>
+    </section>
+  </main>
+
+  <footer class="foot">
+    <dl class="tb" id="titleBlock"></dl>
+  </footer>
+</div>
+<a class="to-arm" id="toArm" href="#top" hidden>↑ Back to the arm</a>
+
+<script>
+/* ==========================================================================
+   PORTFOLIO DATA  -  everything on the page comes from this one object.
+   To add a project, copy one object inside `projects` and edit it.
+   To add a certification, copy one object inside `certifications`. Empty fields are skipped.
+   For a project picture, upload the image next to index.html (for example in an images folder)
+   and set image: "images/name.jpg" on that project.
+   Filter buttons are built from the `tags` of your projects automatically.
+   ========================================================================== */
+const PORTFOLIO = {
+  name: "Syed Yashal Ahmed",
+  role: "Robotics engineer",
+  school: "M.Eng. Robotics · University of Maryland, College Park",
+  intro: "I design and build autonomous robots, from mechanical design and simulation to perception, planning and the hardware that has to work on the table. Before robotics I was a mechanical design engineer on fire suppression systems, so I care about designs that survive being built.",
+  availability: "Open to robotics roles and internships.",
+  focus: "Planning, perception, manipulation and hardware integration.",
+  updated: "October 2026",
+
+  /* Contact links. type "email" shows the address with a copy button.
+     Example: { label: "name@example.com", href: "mailto:name@example.com", type: "email" }
+     Example: { label: "GitHub", href: "https://github.com/yourname" } */
+  links: [],
+
+  projects: [
+    {
+      title: "Autonomous Grand Challenge Robot",
+      kind: "Coursework", ref: "ENPM 701",
+      summary: "A fully autonomous Raspberry Pi robot that classifies objects by color with OpenCV, avoids obstacles with sonar, grips with a servo gripper and navigates by QR code.",
+      highlights: [
+        "Heading control from a BNO055 IMU read through an Arduino serial link.",
+        "Worked around a right motor hardwired at 100% PWM by pulsing it in software.",
+        "Calibrated an 8 cm momentum brake offset and a 70 px camera offset for repeatable stops."
+      ],
+      stack: ["Python", "OpenCV", "Raspberry Pi", "Arduino", "BNO055", "L298N"],
+      tags: ["Perception", "Control", "Hardware"],
+      image: "",
+      links: []
+    },
+    {
+      title: "Arrow Following and Logo Detection",
+      kind: "Coursework", ref: "ENPM 673",
+      summary: "A perception pipeline for a TurtleBot4 in Webots that follows arrows and recognizes the UMD logo.",
+      highlights: [
+        "Logo detection with ORB features and a RANSAC homography.",
+        "Team score of 100/100."
+      ],
+      stack: ["Python", "OpenCV", "Webots", "TurtleBot4"],
+      tags: ["Perception", "Simulation"],
+      image: "",
+      links: []
+    },
+    {
+      title: "AIT* Path Planning Benchmark",
+      kind: "Coursework", ref: "ENPM 661",
+      summary: "A pure-Python 2D benchmark comparing RRT*, Informed RRT* and AIT* in cluttered and narrow-corridor environments.",
+      highlights: [
+        "Studied AIT*: adaptive heuristics, asymmetric bidirectional search and LPA* incremental repair.",
+        "Co-presented the paper and wrote an IEEE-format technical report with benchmark results."
+      ],
+      stack: ["Python", "RRT*", "Informed RRT*", "AIT*"],
+      tags: ["Planning"],
+      image: "",
+      links: [{ label: "Repository", href: "https://github.com/sid-mat/AiT_star" }]
+    },
+    {
+      title: "Surgical Tool Sorting Robot",
+      kind: "Project",
+      summary: "A UR3e arm that sorts surgical tools, with motion planned in MoveIt.",
+      highlights: ["Reached sub-2 mm accuracy."],
+      stack: ["UR3e", "MoveIt"],
+      tags: ["Manipulation", "Planning"],
+      image: "",
+      links: []
+    },
+    {
+      title: "Multi-Body Autonomous SUV",
+      kind: "Project",
+      summary: "A pipeline from SolidWorks CAD to URDF to Gazebo for a multi-body autonomous SUV.",
+      highlights: [
+        "Vehicle modelled in SolidWorks and exported to URDF.",
+        "Simulated in Gazebo."
+      ],
+      stack: ["SolidWorks", "URDF", "Gazebo"],
+      tags: ["Simulation", "Design"],
+      image: "",
+      links: []
+    },
+    {
+      title: "Sim-to-Real PPO Controller",
+      kind: "Project",
+      summary: "A reinforcement learning controller trained in simulation with PPO and transferred to a real system.",
+      highlights: [],
+      stack: ["PyTorch", "PPO"],
+      tags: ["Learning", "Control"],
+      image: "",
+      links: []
+    }
+  ],
+
+  skills: [
+    { group: "Languages", items: ["Python", "C++"] },
+    { group: "Robotics software", items: ["ROS 2", "MoveIt", "Gazebo", "Webots", "URDF"] },
+    { group: "Perception and learning", items: ["OpenCV", "PyTorch", "Feature matching", "Reinforcement learning"] },
+    { group: "Design and hardware", items: ["SolidWorks", "Electromechanical integration", "PLC and Ladder Logic"] },
+    { group: "Engineering practice", items: ["NFPA and BS standards", "Hydraulic calculation", "BOQ and tendering", "Product management"] }
+  ],
+
+  education: {
+    degrees: [
+      { degree: "Master of Engineering, Robotics", school: "University of Maryland, College Park" },
+      { degree: "Bachelor's, Mechanical Engineering", school: "" }
+    ],
+    coursework: [
+      { code: "ENPM 661", name: "Planning for Autonomous Robots" },
+      { code: "ENPM 673", name: "Perception for Autonomous Robots" },
+      { code: "ENPM 701", name: "Autonomous Robotics" },
+      { code: "ENPM 818Z", name: "On-Road Automated Vehicles" }
+    ]
+  },
+
+  /* Each certification: name, issuer, year, link (all optional except name). */
+  certifications: [
+    { name: "Industrial Automation", issuer: "", year: "", link: "" },
+    { name: "PLC and Ladder Logic", issuer: "", year: "", link: "" }
+  ]
+};
+
+/* ============================ rendering ============================ */
+const D = PORTFOLIO;
+const $ = (s, r = document) => r.querySelector(s);
+const esc = s => String(s == null ? "" : s).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+const chips = arr => (arr || []).map(x => `<span class="chip">${esc(x)}</span>`).join("");
+
+function renderHero() {
+  $("#role").textContent = D.role;
+  $("#name").innerHTML = D.name.split(" ").map(w => `<span>${esc(w)}</span>`).join("");
+  $("#intro").textContent = D.intro;
+  $("#school").textContent = D.school;
+}
+
+function phLabel(p) { return p.ref || (p.stack || [])[0] || p.kind || "Project"; }
+function shot(p) {
+  if (p.image) return '<div class="shot" data-ph="' + esc(phLabel(p)) + '"><img src="' + esc(p.image) + '" alt="' + esc(p.alt || p.title) + '" loading="lazy"></div>';
+  return '<div class="shot ph" aria-hidden="true"><b>' + esc(phLabel(p)) + '</b><span>Photo to be added</span></div>';
+}
+let activeTag = "All";
+function renderProjects() {
+  const all = D.projects || [];
+  const sec = $("#projects");
+  if (!all.length) { sec.hidden = true; return; }
+  const tags = [...new Set(all.flatMap(p => p.tags || []))];
+  const f = $("#filters");
+  if (tags.length < 2) { f.hidden = true; }
+  else {
+    f.hidden = false;
+    f.innerHTML = ["All", ...tags].map(t => {
+      const n = t === "All" ? all.length : all.filter(p => (p.tags || []).includes(t)).length;
+      return `<button type="button" class="filter" data-tag="${esc(t)}" aria-pressed="${t === activeTag}">${esc(t)}<span>${n}</span></button>`;
+    }).join("");
+  }
+  const shown = activeTag === "All" ? all : all.filter(p => (p.tags || []).includes(activeTag));
+  $("#pcount").textContent = shown.length === all.length ? `${all.length} projects` : `${shown.length} of ${all.length} projects`;
+  $("#projectGrid").innerHTML = shown.map(p => `
+    <article class="card">
+      ${shot(p)}
+      <div class="card-top"><span>${esc(p.kind || "Project")}</span><span>${esc(p.ref || "")}</span></div>
+      <h3>${esc(p.title)}</h3>
+      <p>${esc(p.summary)}</p>
+      ${(p.highlights || []).length ? `<ul class="hl">${p.highlights.map(h => `<li>${esc(h)}</li>`).join("")}</ul>` : ""}
+      ${(p.stack || []).length ? `<ul class="stack">${p.stack.map(s => `<li class="chip">${esc(s)}</li>`).join("")}</ul>` : ""}
+      ${(p.links || []).length ? `<div class="card-links">${p.links.map(l => `<a href="${esc(l.href)}" target="_blank" rel="noopener">${esc(l.label)} ↗</a>`).join("")}</div>` : ""}
+    </article>`).join("");
+  document.querySelectorAll("#projectGrid .shot img").forEach(img => img.addEventListener("error", () => {
+    const sh = img.parentNode;
+    sh.classList.add("ph"); sh.setAttribute("aria-hidden", "true");
+    sh.innerHTML = "<b>" + esc(sh.dataset.ph) + "</b><span>Photo to be added</span>";
+  }));
+}
+$("#filters").addEventListener("click", e => {
+  const b = e.target.closest("button[data-tag]");
+  if (!b) return;
+  activeTag = b.dataset.tag;
+  renderProjects();
+});
+
+function renderCerts() {
+  const cs = D.certifications || [];
+  if (!cs.length) { $("#certifications").hidden = true; return; }
+  $("#ccount").textContent = cs.length + (cs.length === 1 ? " certification" : " certifications");
+  const seal = '<svg class="seal" viewBox="0 0 48 48" fill="none" aria-hidden="true"><circle cx="24" cy="24" r="21" stroke="currentColor" stroke-width="2.5"/><circle cx="24" cy="24" r="15" stroke="currentColor" stroke-width="1.5" stroke-dasharray="3 3"/><path class="tick" d="M16 25l6 6 11-13" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+  $("#certGrid").innerHTML = cs.map(c => {
+    const meta = [c.issuer, c.year].filter(Boolean).join(" · ");
+    return '<article class="cert">' + seal + '<div><h3>' + esc(c.name) + '</h3>' +
+      (meta ? '<p class="meta">' + esc(meta) + '</p>' : "") +
+      (c.link ? '<a class="cl" href="' + esc(c.link) + '" target="_blank" rel="noopener">View credential ↗</a>' : "") +
+      '</div></article>';
+  }).join("");
+}
+
+function renderSkills() {
+  const s = D.skills || [];
+  if (!s.length) { $("#skills").hidden = true; return; }
+  $("#skillGrid").innerHTML = s.map(g => `<div><p class="label">${esc(g.group)}</p><div class="chips">${chips(g.items)}</div></div>`).join("");
+}
+
+function renderEducation() {
+  const e = D.education;
+  if (!e || !((e.degrees || []).length || (e.coursework || []).length)) { $("#education").hidden = true; return; }
+  const left = (e.degrees || []).map(d => `<div class="deg"><h3>${esc(d.degree)}</h3>${d.school ? `<p>${esc(d.school)}</p>` : ""}</div>`).join("");
+  const courses = (e.coursework || []).length
+    ? `<div class="block"><p class="label">Relevant coursework</p>${e.coursework.map(c => `<div class="course"><b>${esc(c.code)}</b><span>${esc(c.name)}</span></div>`).join("")}</div>` : "";
+  $("#eduBody").innerHTML = `<div>${left}</div><div>${courses}</div>`;
+}
+
+function renderContact() {
+  $("#h-contact").textContent = D.availability || "Get in touch.";
+  $("#focus").textContent = D.focus || "";
+  $("#focus").hidden = !D.focus;
+  const links = D.links || [];
+  $("#links").hidden = !links.length;
+  $("#links").innerHTML = links.map(l => l.type === "email"
+    ? `<span class="pill"><span class="sel">${esc(l.label)}</span><button type="button" data-copy="${esc(l.label)}">Copy</button></span>`
+    : `<a class="pill" href="${esc(l.href)}" target="_blank" rel="noopener">${esc(l.label)} ↗</a>`).join("");
+}
+$("#links").addEventListener("click", e => {
+  const b = e.target.closest("button[data-copy]");
+  if (!b) return;
+  const text = b.dataset.copy;
+  const sel = b.parentElement.querySelector(".sel");
+  const fallback = () => { try { const r = document.createRange(); r.selectNodeContents(sel); const s = getSelection(); s.removeAllRanges(); s.addRange(r); } catch (_) {} };
+  try {
+    navigator.clipboard.writeText(text).then(() => { b.textContent = "Copied"; setTimeout(() => { b.textContent = "Copy"; }, 1500); }, fallback);
+  } catch (_) { fallback(); }
+});
+
+let NAV = [];
+function renderNav() {
+  const items = [
+    ["projects", "Projects", (D.projects || []).length],
+    ["skills", "Skills", (D.skills || []).length],
+    ["education", "Education", D.education ? 1 : 0],
+    ["certifications", "Certifications", (D.certifications || []).length, "Certs"],
+    ["contact", "Contact", 1]
+  ];
+  const shown = items.filter(i => i[2]);
+  NAV = shown.map(i => ({ id: i[0], label: i[1], short: i[3] }));
+
+}
+
+function renderFooter() {
+  const cells = [
+    ["Drawn by", D.name],
+    ["Subject", "Robotics portfolio"],
+    ["Revision", D.updated],
+    ["Status", D.availability]
+  ].filter(c => c[1]);
+  $("#titleBlock").innerHTML = cells.map(c => `<div><dt>${esc(c[0])}</dt><dd>${esc(c[1])}</dd></div>`).join("");
+}
+
+renderHero(); renderProjects(); renderSkills(); renderEducation(); renderCerts(); renderContact(); renderNav(); renderFooter();
+
+/* ============================ the arm ============================ */
+(function () {
+  const stage = $("#stage"), cv = $("#rigCanvas"), nodesEl = $("#nodes");
+  if (!stage || !cv || !cv.getContext) return;
+  const ctx = cv.getContext("2d");
+  const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const LEN = [250, 200, 130];                      /* link lengths, mm */
+  const TOTAL = LEN[0] + LEN[1] + LEN[2];
+  const modeEl = $("#mode"), r1 = $("#r1"), r2 = $("#r2"), r3 = $("#r3"), rt = $("#rt");
+
+  /* one node per visible section, placed on the reach radius in layout() */
+  const nodes = (NAV || []).map(n => {
+    const a = document.createElement("a");
+    a.className = "node"; a.href = "#" + n.id;
+    a.innerHTML = '<span class="ring"></span><span class="nl">' + (n.short ? '<span class="lg">' + esc(n.label) + '</span><span class="sh">' + esc(n.short) + '</span>' : esc(n.label)) + "</span>";
+    nodesEl.appendChild(a);
+    return { id: n.id, label: n.label, el: a, x: 0, y: 0 };
+  });
+
+  let W = 0, H = 0, dpr = 1, bx = 0, by = 0, s = 1, R = 0, u = 1;
+  let pts = [{ x: 0, y: 0 }, { x: 0, y: 0 }, { x: 0, y: 0 }, { x: 0, y: 0 }];
+  let tgt = { x: 0, y: 0 }, ptr = { x: 0, y: 0 }, aim = { x: 0, y: 0 };
+  let lastPtr = -1e9, raf = 0, onScreen = true, trail = [];
+  let jaw = 1, jawGoal = 1;                         /* 1 = open, 0 = closed */
+  let hover = null, focused = null, act = null;
+  let lastT = 0, actx = null, hold = false;
+
+  function css(name) { return getComputedStyle(document.documentElement).getPropertyValue(name).trim(); }
+
+  function seedPose() {
+    const ang = [1.15, 0.35, -0.55];
+    pts[0] = { x: bx, y: by };
+    for (let i = 0; i < 3; i++) {
+      pts[i + 1] = { x: pts[i].x + Math.cos(ang[i]) * LEN[i] * s, y: pts[i].y - Math.sin(ang[i]) * LEN[i] * s };
+    }
+    tgt = { x: pts[3].x, y: pts[3].y };
+    ptr = { x: tgt.x, y: tgt.y };
+    aim = { x: tgt.x, y: tgt.y };
+    trail = [];
+  }
+
+  function layout() {
+    const r = cv.getBoundingClientRect();
+    W = r.width; H = r.height;
+    if (!W || !H) return;
+    dpr = Math.min(window.devicePixelRatio || 1, 2);
+    cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr);
+    bx = W * 0.5; by = H * 0.86;
+    const c22 = Math.cos(22 * Math.PI / 180);
+    const Rn = Math.max(90, Math.min(by - 78, (W / 2 - 44) / c22));   /* radius the nodes sit on */
+    R = Rn / 0.94;                                                      /* full reach of the arm */
+    s = R / TOTAL;
+    u = Math.max(0.8, Math.min(1.3, R / 320));
+    const n = nodes.length;
+    nodes.forEach((nd, i) => {
+      const phi = (n === 1 ? 90 : 158 - i * (136 / (n - 1))) * Math.PI / 180;
+      nd.x = bx + Rn * Math.cos(phi); nd.y = by - Rn * Math.sin(phi);
+      nd.el.style.left = nd.x + "px"; nd.el.style.top = nd.y + "px";
+    });
+    seedPose();
+    step(performance.now());
+  }
+
+  function idleTarget(t) {
+    return {
+      x: bx + Math.sin(t * 0.00055) * R * 0.62,
+      y: by - R * (0.5 + 0.28 * Math.sin(t * 0.0009 + 1.3))
+    };
+  }
+
+  function solve(tx, ty) {
+    const l = LEN.map(v => v * s);
+    let dx = tx - bx, dy = ty - by;
+    const d = Math.hypot(dx, dy);
+    if (d > R * 0.999) { const k = R * 0.999 / d; tx = bx + dx * k; ty = by + dy * k; }
+    if (ty > by - 4) ty = by - 4;
+    for (let it = 0; it < 12; it++) {
+      pts[3] = { x: tx, y: ty };
+      for (let i = 2; i >= 0; i--) {
+        const a = pts[i + 1], b = pts[i];
+        const dd = Math.hypot(b.x - a.x, b.y - a.y) || 1e-6, k = l[i] / dd;
+        pts[i] = { x: a.x + (b.x - a.x) * k, y: Math.min(a.y + (b.y - a.y) * k, by - 2) };
+      }
+      pts[0] = { x: bx, y: by };
+      for (let i = 0; i < 3; i++) {
+        const a = pts[i], b = pts[i + 1];
+        const dd = Math.hypot(b.x - a.x, b.y - a.y) || 1e-6, k = l[i] / dd;
+        pts[i + 1] = { x: a.x + (b.x - a.x) * k, y: a.y + (b.y - a.y) * k };
+      }
+    }
+  }
+
+  function wrap(a) { while (a > 180) a -= 360; while (a <= -180) a += 360; return a; }
+  function deg(v) { return (v >= 0 ? "+" : "−") + Math.abs(v).toFixed(1) + "°"; }
+
+  function readouts() {
+    const a = [0, 1, 2].map(i => Math.atan2(-(pts[i + 1].y - pts[i].y), pts[i + 1].x - pts[i].x) * 180 / Math.PI);
+    r1.textContent = deg(wrap(a[0]));
+    r2.textContent = deg(wrap(a[1] - a[0]));
+    r3.textContent = deg(wrap(a[2] - a[1]));
+    rt.textContent = Math.round((pts[3].x - bx) / s) + ", " + Math.round((by - pts[3].y) / s) + " mm";
+  }
+
+  function go(id) {
+    const el = document.getElementById(id);
+    if (el) el.scrollIntoView({ behavior: reduce ? "auto" : "smooth", block: "start" });
+  }
+
+  /* soft mechanical click when the claw shuts */
+  function clack() {
+    if (!actx) return;
+    try {
+      const t = actx.currentTime, o = actx.createOscillator(), g = actx.createGain();
+      o.type = "square"; o.frequency.setValueAtTime(240, t); o.frequency.exponentialRampToValueAtTime(70, t + 0.07);
+      g.gain.setValueAtTime(0.05, t); g.gain.exponentialRampToValueAtTime(0.0001, t + 0.1);
+      o.connect(g); g.connect(actx.destination); o.start(t); o.stop(t + 0.11);
+    } catch (_) {}
+  }
+
+  /* click sequence: approach, close the claw, carry the tag inward, jump, drop it back */
+  function runAct(t) {
+    if (!act) return;
+    const nd = act.node;
+    if (act.phase === "approach") {
+      const d = Math.hypot(pts[3].x - nd.x, pts[3].y - nd.y);
+      if (d < 8 || t - act.t > 800) { act.phase = "grip"; act.t = t; jawGoal = 0; }
+    } else if (act.phase === "grip") {
+      if (jaw < 0.1 || t - act.t > 600) { act.phase = "lift"; act.t = t; act.flash = t; nd.el.classList.add("grip", "carry"); clack(); }
+    } else if (act.phase === "lift") {
+      if (t - act.t > 400) {
+        go(nd.id); act.phase = "release"; act.t = t; jawGoal = 1;
+        nd.el.classList.remove("carry");
+        nd.el.style.left = nd.x + "px"; nd.el.style.top = nd.y + "px";
+      }
+    } else if (act.phase === "release") {
+      if (jaw > 0.92 || t - act.t > 600) { nd.el.classList.remove("grip"); act = null; }
+    }
+  }
+
+  function draw() {
+    const c = { panel: css("--panel"), ink: css("--ink"), muted: css("--muted"), line: css("--line"), blue: css("--blue"), amber: css("--amber") };
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.clearRect(0, 0, W, H);
+
+    /* grid anchored on the base, 25 mm minor and 100 mm major */
+    const minor = 25 * s;
+    ctx.lineWidth = 1;
+    for (let x = bx % minor; x <= W; x += minor) {
+      ctx.globalAlpha = Math.round((x - bx) / minor) % 4 === 0 ? 0.55 : 0.2;
+      ctx.strokeStyle = c.line; ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, H); ctx.stroke();
+    }
+    for (let y = by % minor; y <= H; y += minor) {
+      ctx.globalAlpha = Math.round((by - y) / minor) % 4 === 0 ? 0.55 : 0.2;
+      ctx.strokeStyle = c.line; ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(W, y); ctx.stroke();
+    }
+    ctx.globalAlpha = 1;
+
+    /* reach envelope with a tick every 15 degrees */
+    ctx.setLineDash([4, 6]); ctx.strokeStyle = c.muted; ctx.globalAlpha = 0.7;
+    ctx.beginPath(); ctx.arc(bx, by, R, Math.PI, 2 * Math.PI); ctx.stroke();
+    ctx.setLineDash([]); ctx.globalAlpha = 0.8;
+    for (let a = 0; a <= 180; a += 15) {
+      const q = a * Math.PI / 180;
+      ctx.beginPath(); ctx.moveTo(bx + Math.cos(q) * R, by - Math.sin(q) * R);
+      ctx.lineTo(bx + Math.cos(q) * (R + 7 * u), by - Math.sin(q) * (R + 7 * u)); ctx.stroke();
+    }
+    ctx.globalAlpha = 1;
+
+    /* floor */
+    ctx.fillStyle = c.panel; ctx.fillRect(0, by, W, H - by);
+    ctx.strokeStyle = c.ink; ctx.lineWidth = 2;
+    ctx.beginPath(); ctx.moveTo(0, by); ctx.lineTo(W, by); ctx.stroke();
+    ctx.lineWidth = 1; ctx.globalAlpha = 0.5; ctx.beginPath();
+    for (let x = 0; x < W + 12; x += 10) { ctx.moveTo(x, by); ctx.lineTo(x - 8, by + 8); }
+    ctx.stroke(); ctx.globalAlpha = 1;
+    ctx.fillStyle = c.muted; ctx.font = '400 10px "IBM Plex Mono", monospace';
+    ctx.textAlign = "left"; ctx.fillText("base_link", bx + 30 * u, by + 22);
+    ctx.textAlign = "right"; ctx.fillText("reach " + TOTAL + " mm", W - 10, by + 22);
+
+    /* pedestal */
+    ctx.fillStyle = c.panel; ctx.strokeStyle = c.blue; ctx.lineWidth = 2.5;
+    ctx.beginPath(); ctx.rect(bx - 24 * u, by - 14 * u, 48 * u, 14 * u); ctx.fill(); ctx.stroke();
+
+    /* tool path */
+    if (trail.length > 1) {
+      ctx.lineCap = "round"; ctx.lineWidth = 2;
+      for (let i = 1; i < trail.length; i++) {
+        ctx.globalAlpha = (i / trail.length) * 0.7; ctx.strokeStyle = c.amber;
+        ctx.beginPath(); ctx.moveTo(trail[i - 1].x, trail[i - 1].y); ctx.lineTo(trail[i].x, trail[i].y); ctx.stroke();
+      }
+      ctx.globalAlpha = 1;
+    }
+
+    /* target crosshair, hidden while the arm is aiming at a section */
+    if (!(act || hover || focused)) {
+      ctx.strokeStyle = c.ink; ctx.globalAlpha = 0.55; ctx.lineWidth = 1;
+      ctx.beginPath(); ctx.arc(aim.x, aim.y, 9 * u, 0, 6.2832);
+      ctx.moveTo(aim.x - 16 * u, aim.y); ctx.lineTo(aim.x + 16 * u, aim.y);
+      ctx.moveTo(aim.x, aim.y - 16 * u); ctx.lineTo(aim.x, aim.y + 16 * u); ctx.stroke();
+      ctx.globalAlpha = 1;
+    }
+
+    /* links: outlined tubes */
+    ctx.lineCap = "round"; ctx.lineJoin = "round";
+    for (let i = 0; i < 3; i++) {
+      ctx.strokeStyle = c.blue; ctx.lineWidth = 18 * u;
+      ctx.beginPath(); ctx.moveTo(pts[i].x, pts[i].y); ctx.lineTo(pts[i + 1].x, pts[i + 1].y); ctx.stroke();
+      ctx.strokeStyle = c.panel; ctx.lineWidth = 12 * u;
+      ctx.beginPath(); ctx.moveTo(pts[i].x, pts[i].y); ctx.lineTo(pts[i + 1].x, pts[i + 1].y); ctx.stroke();
+    }
+
+    /* joints */
+    for (let i = 0; i < 3; i++) {
+      ctx.fillStyle = c.panel; ctx.strokeStyle = c.blue; ctx.lineWidth = 3;
+      ctx.beginPath(); ctx.arc(pts[i].x, pts[i].y, 10 * u, 0, 6.2832); ctx.fill(); ctx.stroke();
+      ctx.fillStyle = c.ink; ctx.beginPath(); ctx.arc(pts[i].x, pts[i].y, 2.5 * u, 0, 6.2832); ctx.fill();
+    }
+
+    /* lock-on brackets around the section being worked, and a spark when the claw shuts */
+    const lk = act ? act.node : (hover || focused);
+    if (lk && !(act && (act.phase === "lift" || act.phase === "release"))) {
+      const q = (12 + 9 * jaw) * u, l = 6 * u;
+      ctx.strokeStyle = c.amber; ctx.lineWidth = 2; ctx.lineCap = "butt"; ctx.lineJoin = "miter";
+      for (const sx of [-1, 1]) for (const sy of [-1, 1]) {
+        ctx.beginPath();
+        ctx.moveTo(lk.x + sx * q, lk.y + sy * (q - l)); ctx.lineTo(lk.x + sx * q, lk.y + sy * q); ctx.lineTo(lk.x + sx * (q - l), lk.y + sy * q);
+        ctx.stroke();
+      }
+    }
+    if (act && act.flash && lastT - act.flash < 280) {
+      const f = (lastT - act.flash) / 280;
+      ctx.strokeStyle = c.amber; ctx.lineWidth = 2; ctx.lineCap = "round"; ctx.globalAlpha = 1 - f;
+      for (let i = 0; i < 10; i++) {
+        const a = i * Math.PI / 5, r1 = (12 + f * 26) * u, r2 = r1 + 8 * u * (1 - f);
+        ctx.beginPath();
+        ctx.moveTo(pts[3].x + Math.cos(a) * r1, pts[3].y + Math.sin(a) * r1);
+        ctx.lineTo(pts[3].x + Math.cos(a) * r2, pts[3].y + Math.sin(a) * r2);
+        ctx.stroke();
+      }
+      ctx.globalAlpha = 1;
+    }
+
+    /* claw: two hinged fingers, jaw 1 = open, 0 = closed */
+    const ang = Math.atan2(pts[3].y - pts[2].y, pts[3].x - pts[2].x);
+    const th = -0.15 + 0.65 * jaw, th2 = th - 1.0;
+    ctx.save(); ctx.translate(pts[3].x, pts[3].y); ctx.rotate(ang); ctx.scale(u, u);
+    ctx.strokeStyle = c.amber; ctx.lineWidth = 4; ctx.lineCap = "round"; ctx.lineJoin = "round";
+    ctx.beginPath(); ctx.moveTo(0, -11); ctx.lineTo(0, 11);
+    for (const sg of [-1, 1]) {
+      const kx = 15 * Math.cos(th), ky = sg * (11 + 15 * Math.sin(th));
+      ctx.moveTo(0, sg * 11); ctx.lineTo(kx, ky);
+      ctx.lineTo(kx + 10 * Math.cos(th2), ky + sg * 10 * Math.sin(th2));
+    }
+    ctx.stroke();
+    ctx.restore();
+  }
+
+  function step(t) {
+    lastT = t;
+    const node = act ? act.node : (hover || focused);
+    const idle = !reduce && !node && (t - lastPtr) > 3000;
+    let want;
+    if (act && act.phase === "lift") {
+      /* pull the gripped tag inward, toward the middle of the workspace */
+      const px = bx, py = by - R * 0.55;
+      want = { x: act.node.x + (px - act.node.x) * 0.35, y: act.node.y + (py - act.node.y) * 0.35 };
+    } else if (node) want = { x: node.x, y: node.y };
+    else if (idle) want = idleTarget(t);
+    else if (reduce && lastPtr < 0) want = idleTarget(0);
+    else want = ptr;
+    aim = want;
+    const k = reduce ? 1 : (act ? (act.phase === "lift" ? 0.18 : 0.24) : 0.14);
+    tgt.x += (want.x - tgt.x) * k; tgt.y += (want.y - tgt.y) * k;
+    if (idle) { ptr.x = tgt.x; ptr.y = tgt.y; }
+    if (!act && !hold) jawGoal = node ? 1 : 0.5;     /* wide open over a section, relaxed otherwise */
+    solve(tgt.x, tgt.y);
+    runAct(t);
+    jaw += (jawGoal - jaw) * (reduce ? 1 : 0.22);
+    if (act && act.phase === "lift") {
+      act.node.el.style.left = pts[3].x + "px"; act.node.el.style.top = pts[3].y + "px";
+    }
+    trail.push({ x: pts[3].x, y: pts[3].y });
+    if (trail.length > 70) trail.shift();
+    draw(); readouts();
+    const tag = act ? (act.phase === "lift" ? "Carrying · " : "Gripping · ") + act.node.label
+      : node ? "Target · " + node.label
+      : (idle || (reduce && lastPtr < 0)) ? "Auto sweep" : "Tracking pointer";
+    if (modeEl.textContent !== tag) modeEl.textContent = tag;
+  }
+
+  function loop(t) { step(t); raf = requestAnimationFrame(loop); }
+  function start() { if (!raf && !reduce && onScreen && !document.hidden) raf = requestAnimationFrame(loop); }
+  function stop() { if (raf) { cancelAnimationFrame(raf); raf = 0; } }
+
+  function nodeFrom(el) {
+    const a = el && el.closest ? el.closest(".node") : null;
+    return a ? (nodes.find(n => n.el === a) || null) : null;
+  }
+  function track(e) {
+    const r = cv.getBoundingClientRect();
+    ptr.x = e.clientX - r.left; ptr.y = Math.min(e.clientY - r.top, by - 4);
+    lastPtr = performance.now();
+    hover = nodeFrom(e.target);
+    if (reduce) step(lastPtr);
+  }
+  stage.addEventListener("pointermove", track);
+  stage.addEventListener("pointerdown", track);
+  stage.addEventListener("pointerleave", () => { hover = null; if (reduce) step(performance.now()); });
+  nodesEl.addEventListener("focusin", e => { focused = nodeFrom(e.target); lastPtr = performance.now(); if (reduce) step(lastPtr); });
+  nodesEl.addEventListener("focusout", () => { focused = null; if (reduce) step(performance.now()); });
+
+  nodesEl.addEventListener("click", e => {
+    const nd = nodeFrom(e.target);
+    if (!nd) return;
+    e.preventDefault();
+    if (act || hold) return;
+    lastPtr = performance.now();
+    try {
+      const AC = window.AudioContext || window.webkitAudioContext;
+      if (AC) { actx = actx || new AC(); if (actx.state === "suspended") actx.resume(); }
+    } catch (_) {}
+    if (reduce) {
+      /* no animation: show the closed claw briefly, then jump */
+      hold = true; hover = nd; jawGoal = 0; step(lastPtr); nd.el.classList.add("grip");
+      setTimeout(() => { go(nd.id); hold = false; nd.el.classList.remove("grip"); step(performance.now()); }, 350);
+      return;
+    }
+    act = { node: nd, phase: "approach", t: performance.now(), flash: 0 };
+    start();
+  });
+
+  if ("ResizeObserver" in window) new ResizeObserver(() => { layout(); }).observe(cv);
+  else window.addEventListener("resize", layout);
+  if ("IntersectionObserver" in window) {
+    new IntersectionObserver(es => { onScreen = es[0].isIntersecting; onScreen ? start() : stop(); }).observe(cv);
+  }
+  document.addEventListener("visibilitychange", () => { document.hidden ? stop() : start(); });
+  layout();
+  start();
+})();
+
+/* floating shortcut back to the arm once it has scrolled out of view */
+(function () {
+  const b = $("#toArm"), rig = document.querySelector(".rig");
+  if (!b || !rig || !("IntersectionObserver" in window)) return;
+  new IntersectionObserver(es => { b.hidden = es[0].isIntersecting; }).observe(rig);
+  b.addEventListener("click", e => {
+    e.preventDefault();
+    window.scrollTo({ top: 0, behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" });
+  });
+})();
+</script>
+
+</body>
+</html>
